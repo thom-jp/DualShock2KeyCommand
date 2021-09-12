@@ -93,6 +93,7 @@ void mode2(){
   } else {
     Keyboard.release(KEY_DOWN_ARROW);
   }
+  
   if (PS4.getButtonPress(LEFT)) {
     Keyboard.press(KEY_LEFT_ARROW);
   } else {
@@ -111,11 +112,18 @@ void mode2(){
     Keyboard.releaseAll();
   }
 
+  if (PS4.getButtonClick(TRIANGLE)) {
+    Keyboard.press('c');
+    delay(40);
+    Keyboard.releaseAll();
+  }
+
   if (PS4.getButtonClick(OPTIONS)) {
     Keyboard.press(KEY_ESC);
     delay(40);
     Keyboard.releaseAll();
   }
+
 }
 void mode1(){
   if (PS4.getButtonPress(PS)&& ((abs(128 - PS4.getAnalogHat(RightHatX)) + abs(128 - PS4.getAnalogHat(RightHatX))) >= 127)) {
