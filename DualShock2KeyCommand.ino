@@ -39,12 +39,24 @@ void setup() {
 void loop() {
   Usb.Task();
   if (PS4.connected()) {
-    if (PS4.getButtonPress(PS) && PS4.getButtonClick(TRIANGLE)) {
-      PS4.setLed(0,0,0);
-      delay(1000);
-      PS4.setLed(0,255,100);
-      mode = 1;
+    if (PS4.getButtonPress(PS)){
+      if (PS4.getButtonClick(TRIANGLE)) {
+        PS4.setRumbleOn(RumbleHigh);
+        PS4.setLed(0,255,100);
+        mode = 1;
+      }
+      if (PS4.getButtonClick(CROSS)) {
+        PS4.setRumbleOn(RumbleHigh);
+        PS4.setLed(Blue);
+        mode = 0;
+      }
+      if (PS4.getButtonClick(CIRCLE)) {
+        PS4.setRumbleOn(RumbleHigh);
+        PS4.setLed(Red);
+        mode = 2;
+      }
     }
+
     switch(mode){
       case 1:
         mode1();
@@ -57,7 +69,53 @@ void loop() {
 }
 
 void mode2(){
+  if (PS4.getButtonPress(CROSS)) {
+    Keyboard.press('z');
+  } else {
+    Keyboard.release('z');
+  }
   
+  if (PS4.getButtonClick(SQUARE)) {
+  }
+
+  if (PS4.getButtonPress(UP)) {
+    Keyboard.press(KEY_UP_ARROW);
+  } else {
+    Keyboard.release(KEY_UP_ARROW);
+  }
+  if (PS4.getButtonPress(RIGHT)) {
+    Keyboard.press(KEY_RIGHT_ARROW);
+  } else {
+    Keyboard.release(KEY_RIGHT_ARROW);
+  }
+  if (PS4.getButtonPress(DOWN)) {
+    Keyboard.press(KEY_DOWN_ARROW);
+  } else {
+    Keyboard.release(KEY_DOWN_ARROW);
+  }
+  if (PS4.getButtonPress(LEFT)) {
+    Keyboard.press(KEY_LEFT_ARROW);
+  } else {
+    Keyboard.release(KEY_LEFT_ARROW);
+  }
+
+  if (PS4.getButtonPress(R1)) {
+    Keyboard.press(KEY_LEFT_SHIFT);
+  } else {
+    Keyboard.release(KEY_LEFT_SHIFT);
+  }
+  
+  if (PS4.getButtonClick(L1)) {
+    Keyboard.press('x');
+    delay(40);
+    Keyboard.releaseAll();
+  }
+
+  if (PS4.getButtonClick(OPTIONS)) {
+    Keyboard.press(KEY_ESC);
+    delay(40);
+    Keyboard.releaseAll();
+  }
 }
 void mode1(){
   if (PS4.getButtonPress(PS)&& ((abs(128 - PS4.getAnalogHat(RightHatX)) + abs(128 - PS4.getAnalogHat(RightHatX))) >= 127)) {
