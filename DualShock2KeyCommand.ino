@@ -55,6 +55,11 @@ void loop() {
         PS4.setLed(Red);
         mode = 2;
       }
+      if (PS4.getButtonClick(SQUARE)) {
+        PS4.setRumbleOn(RumbleHigh);
+        PS4.setLed(255,0,255);
+        mode = 3;
+      }
     }
 
     switch(mode){
@@ -63,6 +68,9 @@ void loop() {
         break;
       case 2:
         mode2();
+        break;
+      case 3:
+        mode3();
         break;
     }
   }
@@ -123,8 +131,78 @@ void mode2(){
     delay(40);
     Keyboard.releaseAll();
   }
-
 }
+
+
+void mode3(){
+  if (PS4.getButtonClick(CIRCLE)) {
+    Keyboard.press(KEY_RETURN);
+    delay(100);
+    Keyboard.releaseAll();
+  }
+
+  if (PS4.getButtonClick(SQUARE)) {
+    Keyboard.press(KEY_DELETE);
+    delay(100);
+    Keyboard.releaseAll();
+  }
+  
+  if (PS4.getButtonClick(CROSS)) {
+    Keyboard.press(KEY_LEFT_ALT);
+    Keyboard.press(KEY_F4);
+    delay(100);
+    Keyboard.releaseAll();
+  }
+
+  if (PS4.getButtonClick(TRIANGLE)) {
+    Keyboard.press(KEY_LEFT_GUI);
+    Keyboard.press('d');
+    delay(100);
+    Keyboard.releaseAll();
+  }
+
+  if (PS4.getButtonPress(UP)) {
+    Keyboard.press(KEY_UP_ARROW);
+  } else {
+    Keyboard.release(KEY_UP_ARROW);
+  }
+  if (PS4.getButtonPress(RIGHT)) {
+    Keyboard.press(KEY_RIGHT_ARROW);
+  } else {
+    Keyboard.release(KEY_RIGHT_ARROW);
+  }
+  if (PS4.getButtonPress(DOWN)) {
+    Keyboard.press(KEY_DOWN_ARROW);
+  } else {
+    Keyboard.release(KEY_DOWN_ARROW);
+  }
+  
+  if (PS4.getButtonPress(LEFT)) {
+    Keyboard.press(KEY_LEFT_ARROW);
+  } else {
+    Keyboard.release(KEY_LEFT_ARROW);
+  }
+
+  if (PS4.getButtonClick(R1)) {
+    Keyboard.press(KEY_TAB);
+    delay(100);
+    Keyboard.releaseAll();
+  }
+  
+  if (PS4.getButtonClick(L1)) {
+    Keyboard.press(KEY_LEFT_SHIFT);
+    Keyboard.press(KEY_TAB);
+    delay(100);
+    Keyboard.releaseAll();
+  }
+
+  if (PS4.getButtonClick(OPTIONS)) {
+    Keyboard.press(KEY_ESC);
+    delay(40);
+    Keyboard.releaseAll();
+  }
+}
+
 void mode1(){
   if (PS4.getButtonPress(PS)&& ((abs(128 - PS4.getAnalogHat(RightHatX)) + abs(128 - PS4.getAnalogHat(RightHatX))) >= 127)) {
     //TopRight
