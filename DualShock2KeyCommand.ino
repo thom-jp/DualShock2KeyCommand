@@ -20,6 +20,13 @@ uint8_t oldL2Value, oldR2Value;
 uint8_t oldRightHatX, oldRightHatY;
 uint8_t redundant;
 uint8_t mode;
+float accm_x = 0;
+float accm_y = 0;
+float accm_w = 0;
+float r = 0;
+float x = 0;
+float y = 0;
+int dev = 64;
 
 void setup() {
   if (Usb.Init() == -1) {
@@ -60,6 +67,11 @@ void loop() {
         PS4.setLed(255,0,255);
         mode = 3;
       }
+      if (PS4.getButtonClick(R1)) {
+        PS4.setRumbleOn(RumbleHigh);
+        PS4.setLed(Yellow);
+        mode = 4;
+      }
     }
 
     switch(mode){
@@ -71,6 +83,9 @@ void loop() {
         break;
       case 3:
         mode3();
+        break;
+      case 4:
+        mode4();
         break;
     }
   }
@@ -381,4 +396,71 @@ void mode1(){
   }
   if (PS4.getButtonClick(TOUCHPAD)) {
   }
+}
+
+void mode4() {
+    y = PS4.getAnalogHat(LeftHatY)-128;
+    x = PS4.getAnalogHat(LeftHatX)-128;
+    r = sqrt(pow(x,2) + pow(y,2));
+    if (PS4.getButtonPress(R1)) {
+      dev = 64;
+    } else {
+      dev = 8;
+    }
+    if (r > 5) {
+     accm_x += x / dev;
+     accm_y += y / dev;
+     Mouse.move((int)accm_x, (int)accm_y, 0);
+     accm_x -= (int)accm_x;
+     accm_y -= (int)accm_y;
+    }
+    if (PS4.getButtonPress(CROSS)) {
+      Mouse.press();
+    } else {
+      Mouse.release();
+    }
+    if (PS4.getButtonPress(L1)) {
+      Keyboard.press(KEY_LEFT_CTRL);
+    } else {
+      Keyboard.releaseAll();
+    }
+    
+    int r2 = PS4.getAnalogButton(R2);
+    int l2 = PS4.getAnalogButton(L2);
+    if (l2) {
+      accm_w += (float)l2/4096;
+      Mouse.move(0, 0, (int)accm_w);
+      accm_w -= (int)accm_w;
+    }
+    if (r2) {
+      accm_w += (float)r2/4096;
+      Mouse.move(0, 0, -(int)accm_w);
+      accm_w -= (int)accm_w;
+    }
+    if (PS4.getButtonClick(OPTIONS)) {
+      Keyboard.press('f');
+      delay(40);
+      Keyboard.releaseAll();
+    }
+    if (PS4.getButtonPress(UP)) {
+      Keyboard.press(KEY_PAGE_UP);
+    } else {
+      Keyboard.release(KEY_PAGE_UP);
+    }
+    if (PS4.getButtonPress(RIGHT)) {
+      Keyboard.press(KEY_RIGHT_ARROW);
+    } else {
+      Keyboard.release(KEY_RIGHT_ARROW);
+    }
+    if (PS4.getButtonPress(DOWN)) {
+      Keyboard.press(KEY_PAGE_DOWN);
+    } else {
+      Keyboard.release(KEY_PAGE_DOWN);
+    }
+    
+    if (PS4.getButtonPress(LEFT)) {
+      Keyboard.press(KEY_LEFT_ARROW);
+    } else {
+      Keyboard.release(KEY_LEFT_ARROW);
+    }
 }
