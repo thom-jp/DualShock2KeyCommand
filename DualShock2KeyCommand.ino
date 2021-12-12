@@ -82,9 +82,6 @@ void mode2(){
   } else {
     Keyboard.release('z');
   }
-  
-  if (PS4.getButtonClick(SQUARE)) {
-  }
 
   if (PS4.getButtonPress(UP)) {
     Keyboard.press(KEY_UP_ARROW);
@@ -121,11 +118,14 @@ void mode2(){
   }
 
   if (PS4.getButtonClick(TRIANGLE)) {
+  }
+  
+  if (PS4.getButtonClick(SQUARE)) {
     Keyboard.press('c');
     delay(40);
     Keyboard.releaseAll();
   }
-
+  
   if (PS4.getButtonClick(OPTIONS)) {
     Keyboard.press(KEY_ESC);
     delay(40);
