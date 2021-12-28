@@ -419,6 +419,11 @@ void mode4() {
     } else {
       Mouse.release();
     }
+    if (PS4.getButtonPress(TRIANGLE)) {
+      Mouse.press(MOUSE_RIGHT);
+    } else {
+      Mouse.release(MOUSE_RIGHT);
+    }
     if (PS4.getButtonPress(L1)) {
       Keyboard.press(KEY_LEFT_CTRL);
     } else {
