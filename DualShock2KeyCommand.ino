@@ -447,25 +447,39 @@ void mode4() {
       delay(40);
       Keyboard.releaseAll();
     }
-    if (PS4.getButtonPress(UP)) {
-      Keyboard.press(KEY_PAGE_UP);
-    } else {
-      Keyboard.release(KEY_PAGE_UP);
+    if (PS4.getButtonPress(PS)){
+      if (PS4.getButtonClick(UP)) {
+        Keyboard.press(KEY_LEFT_GUI);
+        Keyboard.press(';');
+        Keyboard.releaseAll();
+      }
+      if (PS4.getButtonClick(DOWN)) {
+        Keyboard.press(KEY_LEFT_GUI);
+        Keyboard.press('-');
+        Keyboard.releaseAll();
+      }
     }
-    if (PS4.getButtonPress(RIGHT)) {
-      Keyboard.press(KEY_RIGHT_ARROW);
-    } else {
-      Keyboard.release(KEY_RIGHT_ARROW);
-    }
-    if (PS4.getButtonPress(DOWN)) {
-      Keyboard.press(KEY_PAGE_DOWN);
-    } else {
-      Keyboard.release(KEY_PAGE_DOWN);
-    }
-    
-    if (PS4.getButtonPress(LEFT)) {
-      Keyboard.press(KEY_LEFT_ARROW);
-    } else {
-      Keyboard.release(KEY_LEFT_ARROW);
+    else {
+      if (PS4.getButtonPress(UP)) {
+        Keyboard.press(KEY_PAGE_UP);
+      } else {
+        Keyboard.release(KEY_PAGE_UP);
+      }
+      if (PS4.getButtonPress(RIGHT)) {
+        Keyboard.press(KEY_RIGHT_ARROW);
+      } else {
+        Keyboard.release(KEY_RIGHT_ARROW);
+      }
+      if (PS4.getButtonPress(DOWN)) {
+        Keyboard.press(KEY_PAGE_DOWN);
+      } else {
+        Keyboard.release(KEY_PAGE_DOWN);
+      }
+      
+      if (PS4.getButtonPress(LEFT)) {
+        Keyboard.press(KEY_LEFT_ARROW);
+      } else {
+        Keyboard.release(KEY_LEFT_ARROW);
+      }
     }
 }
