@@ -290,11 +290,7 @@ void mode_mouse() {
     } else {
       Mouse.release(MOUSE_RIGHT);
     }
-    if (PS4.getButtonPress(L1)) {
-      Keyboard.press(KEY_LEFT_CTRL);
-    } else {
-      Keyboard.releaseAll();
-    }
+    press_sync(L1, KEY_LEFT_CTRL);
     
     int r2 = PS4.getAnalogButton(R2);
     int l2 = PS4.getAnalogButton(L2);
@@ -308,11 +304,9 @@ void mode_mouse() {
       Mouse.move(0, 0, -(int)accm_w);
       accm_w -= (int)accm_w;
     }
-    if (PS4.getButtonClick(OPTIONS)) {
-      Keyboard.press('f');
-      delay(40);
-      Keyboard.releaseAll();
-    }
+
+    press_sync(OPTIONS, 'f');
+
     if (PS4.getButtonPress(PS)){
       if (PS4.getButtonClick(UP)) {
         Keyboard.press(KEY_LEFT_GUI);
@@ -326,26 +320,9 @@ void mode_mouse() {
       }
     }
     else {
-      if (PS4.getButtonPress(UP)) {
-        Keyboard.press(KEY_PAGE_UP);
-      } else {
-        Keyboard.release(KEY_PAGE_UP);
-      }
-      if (PS4.getButtonPress(RIGHT)) {
-        Keyboard.press(KEY_RIGHT_ARROW);
-      } else {
-        Keyboard.release(KEY_RIGHT_ARROW);
-      }
-      if (PS4.getButtonPress(DOWN)) {
-        Keyboard.press(KEY_PAGE_DOWN);
-      } else {
-        Keyboard.release(KEY_PAGE_DOWN);
-      }
-      
-      if (PS4.getButtonPress(LEFT)) {
-        Keyboard.press(KEY_LEFT_ARROW);
-      } else {
-        Keyboard.release(KEY_LEFT_ARROW);
-      }
+      press_sync(UP, KEY_PAGE_UP);
+      press_sync(DOWN, KEY_PAGE_DOWN);
+      press_sync(RIGHT, KEY_RIGHT_ARROW);
+      press_sync(LEFT, KEY_LEFT_ARROW);
     }
 }
