@@ -30,6 +30,10 @@ This mode might be useful for everyone.
 - Ctrl: L1
 - Wheel: L2/R2
 
+### Default Mode
+Pless Cross with PS button to turn in Default Mode.
+This mode does nothing special. Just use to avoid misoperation by unintentional button touch.
+
 ## Setup
 It requires HID compatible Arduino and USB Host Sheild.
 How to connect is written in links down below.
