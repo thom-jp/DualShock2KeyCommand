@@ -33,7 +33,8 @@ float accm_w = 0;
 float r = 0;
 float x = 0;
 float y = 0;
-int dev = 64;
+int divider = 64;
+bool disconnected;
 
 void setup() {
   if (Usb.Init() == -1) {
@@ -42,6 +43,7 @@ void setup() {
   Mouse.begin();
   redundant = 1;
   mode = e_none;
+  disconnected = false;
 }
 
 void loop() {
@@ -50,7 +52,7 @@ void loop() {
     if (PS4.getButtonPress(PS)){
       if (PS4.getButtonClick(TRIANGLE)) {
         PS4.setRumbleOn(RumbleHigh);
-        PS4.setLed(0,255,100);
+        disconnected = true;
         mode = e_outlook;
       }
       if (PS4.getButtonClick(CROSS)) {
@@ -60,32 +62,47 @@ void loop() {
       }
       if (PS4.getButtonClick(CIRCLE)) {
         PS4.setRumbleOn(RumbleHigh);
-        PS4.setLed(Red);
+        disconnected = true;
         mode = e_touhou;
       }
       if (PS4.getButtonClick(SQUARE)) {
         PS4.setRumbleOn(RumbleHigh);
-        PS4.setLed(255,0,255);
+        disconnected = true;
         mode = e_none;
       }
       if (PS4.getButtonClick(R1)) {
         PS4.setRumbleOn(RumbleHigh);
-        PS4.setLed(Yellow);
+        disconnected = true;
         mode = e_mouse;
       }
     }
 
     switch(mode){
       case e_outlook:
+        if(disconnected) {
+          PS4.setLed(0,255,100);
+          disconnected = false;
+        }
         mode_outlook();
         break;
       case e_touhou:
+        if(disconnected) {
+          PS4.setLed(Red);
+          disconnected = false;
+        }
         mode_touhou();
         break;
       case e_mouse:
+        if(disconnected) {
+          PS4.setLed(Yellow);
+          disconnected = false;
+        }
+        if(disconnected) PS4.setLed(Yellow);
         mode_mouse();
         break;
     }
+  } else {
+    disconnected = true;
   }
 }
 
@@ -269,13 +286,13 @@ void mode_mouse() {
     x = PS4.getAnalogHat(LeftHatX)-128;
     r = sqrt(pow(x,2) + pow(y,2));
     if (PS4.getButtonPress(R1)) {
-      dev = 64;
+      divider = 64;
     } else {
-      dev = 8;
+      divider = 8;
     }
     if (r > 5) {
-     accm_x += x / dev;
-     accm_y += y / dev;
+     accm_x += x / divider;
+     accm_y += y / divider;
      Mouse.move((int)accm_x, (int)accm_y, 0);
      accm_x -= (int)accm_x;
      accm_y -= (int)accm_y;
