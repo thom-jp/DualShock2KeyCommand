@@ -2,16 +2,6 @@
 #include <Mouse.h>
 #include <PS4USB.h>
 
-// Satisfy the IDE, which needs to see the include statment in the ino too.
-#ifdef dobogusinclude
-#include <spi4teensy3.h>
-#endif
-#include <SPI.h>
-
-// #include "Arduino.h"
-// #include "DFRobotDFPlayerMini.h"
-// DFRobotDFPlayerMini myDFPlayer;
-
 enum eMode {
   e_none,
   e_outlook,
@@ -22,12 +12,9 @@ enum eMode {
 USB Usb;
 PS4USB PS4(&Usb);
 
-bool printAngle, printTouch;
-uint8_t oldL2Value, oldR2Value;
 uint8_t oldRightHatX, oldRightHatY;
 uint8_t redundant;
 eMode mode;
-float accm_w = 0;
 float r = 0;
 float x = 0;
 float y = 0;
@@ -42,9 +29,9 @@ class MouseHandler {
     int divider = 8;
     void move(float xVal, float yVal);
     void wheel(float wVal);
+    void left_press(bool p);
+    void right_press(bool p);
 };
-
-MouseHandler mh;
 
 void MouseHandler::move(float xVal, float yVal) {
   accm_x += xVal / divider;
@@ -59,6 +46,24 @@ void MouseHandler::wheel(float wVal) {
   Mouse.move(0, 0, (int)accm_w);
   accm_w -= (int)accm_w;
 }
+
+void MouseHandler::left_press(bool p) {
+  if(p) {
+    Mouse.press();
+  } else {
+    Mouse.release();
+  }
+}
+
+void MouseHandler::right_press(bool p) {
+  if(p) {
+    Mouse.press(MOUSE_RIGHT);
+  } else {
+    Mouse.release(MOUSE_RIGHT);
+  }
+}
+
+MouseHandler mh;
 
 void setup() {
   if (Usb.Init() == -1) {
@@ -325,16 +330,10 @@ void mode_mouse() {
     if (r > 5) {
      mh.move(x, y);
     }
-    if (PS4.getButtonPress(CROSS)) {
-      Mouse.press();
-    } else {
-      Mouse.release();
-    }
-    if (PS4.getButtonPress(TRIANGLE)) {
-      Mouse.press(MOUSE_RIGHT);
-    } else {
-      Mouse.release(MOUSE_RIGHT);
-    }
+
+    mh.left_press(PS4.getButtonPress(CROSS));
+    mh.right_press(PS4.getButtonPress(TRIANGLE));
+
     press_sync(L1, KEY_LEFT_CTRL);
     
     int r2 = PS4.getAnalogButton(R2);
