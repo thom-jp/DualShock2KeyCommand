@@ -27,14 +27,38 @@ uint8_t oldL2Value, oldR2Value;
 uint8_t oldRightHatX, oldRightHatY;
 uint8_t redundant;
 eMode mode;
-float accm_x = 0;
-float accm_y = 0;
 float accm_w = 0;
 float r = 0;
 float x = 0;
 float y = 0;
-int divider = 64;
 bool disconnected;
+
+class MouseHandler {
+  private:
+    float accm_x = 0;
+    float accm_y = 0;
+    float accm_w = 0;
+  public:
+    int divider = 8;
+    void move(float xVal, float yVal);
+    void wheel(float wVal);
+};
+
+MouseHandler mh;
+
+void MouseHandler::move(float xVal, float yVal) {
+  accm_x += xVal / divider;
+  accm_y += yVal / divider;
+  Mouse.move((int)accm_x, (int)accm_y, 0);
+  accm_x -= (int)accm_x;
+  accm_y -= (int)accm_y;
+}
+
+void MouseHandler::wheel(float wVal) {
+  accm_w += (float)wVal/4096;
+  Mouse.move(0, 0, (int)accm_w);
+  accm_w -= (int)accm_w;
+}
 
 void setup() {
   if (Usb.Init() == -1) {
@@ -141,13 +165,15 @@ void mode_outlook(){
       if (oldRightHatX + redundant < PS4.getAnalogHat(RightHatX) && oldRightHatY + redundant < PS4.getAnalogHat(RightHatY)) {
         //RightRotate
         Keyboard.press(KEY_LEFT_CTRL);
-        Mouse.move(0, 0, 1);
+        //Mouse.move(0, 0, 1);
+        mh.wheel(1);
         Keyboard.releaseAll();
       }
       if (oldRightHatX - redundant > PS4.getAnalogHat(RightHatX) && oldRightHatY - redundant > PS4.getAnalogHat(RightHatY)) {
         //LeftRotate
         Keyboard.press(KEY_LEFT_CTRL);
-        Mouse.move(0, 0, -1);
+        //Mouse.move(0, 0, -1);
+        mh.wheel(-1);
         Keyboard.releaseAll();
       }
     }
@@ -157,13 +183,15 @@ void mode_outlook(){
       if (oldRightHatX - redundant > PS4.getAnalogHat(RightHatX) && oldRightHatY + redundant < PS4.getAnalogHat(RightHatY)) {
         //RightRotate
         Keyboard.press(KEY_LEFT_CTRL);
-        Mouse.move(0, 0, 1);
+        //Mouse.move(0, 0, 1);
+        mh.wheel(1);
         Keyboard.releaseAll();
       }
       if (oldRightHatX + redundant < PS4.getAnalogHat(RightHatX) && oldRightHatY - redundant > PS4.getAnalogHat(RightHatY)) {
         //LeftRotate
         Keyboard.press(KEY_LEFT_CTRL);
-        Mouse.move(0, 0, -1);
+        //Mouse.move(0, 0, -1);
+        mh.wheel(-1);
         Keyboard.releaseAll();
       }
     }
@@ -173,13 +201,15 @@ void mode_outlook(){
       if (oldRightHatX - redundant > PS4.getAnalogHat(RightHatX) && oldRightHatY - redundant > PS4.getAnalogHat(RightHatY)) {
         //RightRotate
         Keyboard.press(KEY_LEFT_CTRL);
-        Mouse.move(0, 0, 1);
+        //Mouse.move(0, 0, 1);
+        mh.wheel(1);
         Keyboard.releaseAll();
       }
       if (oldRightHatX + redundant < PS4.getAnalogHat(RightHatX) && oldRightHatY + redundant < PS4.getAnalogHat(RightHatY)) {
         //LeftRotate
         Keyboard.press(KEY_LEFT_CTRL);
-        Mouse.move(0, 0, -1);
+        //Mouse.move(0, 0, -1);
+        mh.wheel(-1);
         Keyboard.releaseAll();
       }
     }
@@ -189,13 +219,15 @@ void mode_outlook(){
       if (oldRightHatX + redundant < PS4.getAnalogHat(RightHatX) && oldRightHatY - redundant > PS4.getAnalogHat(RightHatY)) {
         //RightRotate
         Keyboard.press(KEY_LEFT_CTRL);
-        Mouse.move(0, 0, 1);
+        //Mouse.move(0, 0, 1);
+        mh.wheel(1);
         Keyboard.releaseAll();
       }
       if (oldRightHatX - redundant > PS4.getAnalogHat(RightHatX) && oldRightHatY + redundant < PS4.getAnalogHat(RightHatY)) {
         //LeftRotate
         Keyboard.press(KEY_LEFT_CTRL);
-        Mouse.move(0, 0, -1);
+        //Mouse.move(0, 0, -1);
+        mh.wheel(-1);
         Keyboard.releaseAll();
       }
     }
@@ -286,16 +318,12 @@ void mode_mouse() {
     x = PS4.getAnalogHat(LeftHatX)-128;
     r = sqrt(pow(x,2) + pow(y,2));
     if (PS4.getButtonPress(R1)) {
-      divider = 64;
+      mh.divider = 64;
     } else {
-      divider = 8;
+      mh.divider = 8;
     }
     if (r > 5) {
-     accm_x += x / divider;
-     accm_y += y / divider;
-     Mouse.move((int)accm_x, (int)accm_y, 0);
-     accm_x -= (int)accm_x;
-     accm_y -= (int)accm_y;
+     mh.move(x, y);
     }
     if (PS4.getButtonPress(CROSS)) {
       Mouse.press();
@@ -312,14 +340,10 @@ void mode_mouse() {
     int r2 = PS4.getAnalogButton(R2);
     int l2 = PS4.getAnalogButton(L2);
     if (l2) {
-      accm_w += (float)l2/4096;
-      Mouse.move(0, 0, (int)accm_w);
-      accm_w -= (int)accm_w;
+      mh.wheel(l2);
     }
     if (r2) {
-      accm_w += (float)r2/4096;
-      Mouse.move(0, 0, -(int)accm_w);
-      accm_w -= (int)accm_w;
+      mh.wheel(-r2);
     }
 
     press_sync(OPTIONS, 'f');
